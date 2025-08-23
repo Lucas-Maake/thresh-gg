@@ -52,41 +52,44 @@ export default function Matchups({ search }) {
       </div>
       <div className="lg:col-span-2">
         <div className="grid md:grid-cols-2 gap-4">
-          {filtered.map((m, i) => (
-            <div key={`${m.enemy}-${i}`} className="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 border border-white/10">
-                    <Swords className="w-4 h-4" />
-                  </span>
-                  <h3 className="text-lg font-semibold">{m.enemy}</h3>
-                  {m.source === 'custom' && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">custom</span>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={cx('text-xs px-2 py-1 rounded-full', badge(m.diff))}>{m.diff}</span>
-                  {m.source === 'custom' ? (
-                    <>
-                      <button className="p-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10" title="Edit" onClick={() => setEditing(i)}>
-                        <Pencil className="w-3.5 h-3.5" />
+          {filtered.map((m, i) => {
+            const idx = matchups.indexOf(m)
+            return (
+              <div key={`${m.enemy}-${idx}`} className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 border border-white/10">
+                      <Swords className="w-4 h-4" />
+                    </span>
+                    <h3 className="text-lg font-semibold">{m.enemy}</h3>
+                    {m.source === 'custom' && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">custom</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={cx('text-xs px-2 py-1 rounded-full', badge(m.diff))}>{m.diff}</span>
+                    {m.source === 'custom' ? (
+                      <>
+                        <button className="p-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10" title="Edit" onClick={() => setEditing(idx)}>
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button className="p-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10" title="Delete"
+                          onClick={() => setMatchups(prev => prev.filter((_,j)=>j!==idx))}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </>
+                    ) : (
+                      <button className="p-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10" title="Clone into builder"
+                        onClick={() => setMatchups(prev => [{ enemy:m.enemy, diff:m.diff, notes:m.notes, source:'custom' }, ...prev])}>
+                        <Plus className="w-3.5 h-3.5" />
                       </button>
-                      <button className="p-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10" title="Delete"
-                        onClick={() => setMatchups(prev => prev.filter((_,j)=>j!==i))}>
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </>
-                  ) : (
-                    <button className="p-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10" title="Clone into builder"
-                      onClick={() => setMatchups(prev => [{ enemy:m.enemy, diff:m.diff, notes:m.notes, source:'custom' }, ...prev])}>
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
-                  )}
+                    )}
+                  </div>
                 </div>
+                <p className="text-sm text-slate-300 mt-2">{m.notes}</p>
               </div>
-              <p className="text-sm text-slate-300 mt-2">{m.notes}</p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
